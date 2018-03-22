@@ -7,16 +7,23 @@
   "license": "MIT",
   "scripts": {
     "start": "webpack-dev-server --mode development",
-    "build": "webpack -d --mode production"
+    "build": "webpack -d --mode production",
+    "//": "flow用の設定",
+    "flow": "flow",
+    "flow-typed": "flow-typed install"
   },
   "dependencies": {
+    "flow-bin": "^0.68.0",
+    "flow-typed": "^2.4.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0"
   },
   "devDependencies": {
+    "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.4",
     "babel-preset-env": "^1.6.1",
+    "babel-preset-flow": "^6.23.0",
     "babel-preset-react": "^6.24.1",
     "eslint": "^4.19.0",
     "eslint-config-airbnb": "^16.1.0",

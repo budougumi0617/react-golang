@@ -9,11 +9,14 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.js$/,
+        test: /\.(js|jsx|mjs)$/,
         exclude: /node_modules/,
         loader: 'babel-loader',
         options: {
-          presets: ['react', 'env']
+          presets: [
+            'react',
+            'env', // es2015からenvになった
+          ]
         }
       }
     ]

@@ -1,3 +1,9 @@
+.idea/
+.vscode/
+.DS_Store
+*.tgz
+my-app*
+
 # Logs
 logs
 *.log
@@ -59,3 +65,4 @@ typings/
 
 # build file
 dist/app.js
+

@@ -26,7 +26,7 @@ module.exports = [
       ],
     },
     plugins: [
-      new ExtractTextPlugin('style.css'),
+      new ExtractTextPlugin('app.css'),
     ],
     devServer: {
       contentBase: path.resolve(__dirname, 'dist'),
@@ -40,13 +40,31 @@ module.exports = [
     },
     output: {
       path: path.resolve(__dirname, 'dist'),
-      filename: 'bundle.css',
+      filename: 'app.css',
     },
     module: {
-      test: /\.scss$/,
-      loader: ExtractTextPlugin.extract({
-        [{loader: 'css-loader', options: {url: false}}, {loader: 'sass-loader'}],
-      }),
+      rules: [
+        {
+          test: /\.scss$/,
+          use: ExtractTextPlugin.extract({
+            use: [
+              {
+                loader: 'css-loader',
+                options: {
+                  url: false,
+                  sourceMap: true
+                },
+              },
+              {
+                loader: 'sass-loader',
+                options: {
+                  sourceMap: true
+                }
+              }
+            ],
+          }),
+        },
+      ],
     },
     plugins: [
       new ExtractTextPlugin('bundle.css'),

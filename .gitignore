@@ -65,4 +65,6 @@ typings/
 
 # build file
 dist/app.js
+dist/app.css
+dist/bundle.css
 

@@ -67,7 +67,7 @@ module.exports = [
       ],
     },
     plugins: [
-      new ExtractTextPlugin('bundle.css'),
+      new ExtractTextPlugin('app.css'),
     ],
   },
 ];

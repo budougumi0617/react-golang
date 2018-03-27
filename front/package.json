@@ -10,7 +10,9 @@
     "build": "webpack -d --mode production",
     "//": "flow用の設定",
     "flow": "flow",
-    "flow-typed": "flow-typed install"
+    "flow-typed": "flow-typed install",
+    "//": "For fix https://github.com/yarnpkg/yarn/issues/4867",
+    "post-install": "npm rebuild node-sass"
   },
   "dependencies": {
     "flow-bin": "^0.68.0",

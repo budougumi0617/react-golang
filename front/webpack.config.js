@@ -34,6 +34,8 @@ module.exports = [
       port: 8080
     },
     devtool: 'inline-source-map'
+    // Vagrantなどでhot reloadされない場合はwatchOptions
+    // https://webpack.js.org/configuration/watch/#watchoptions
   },
   {
     entry: {

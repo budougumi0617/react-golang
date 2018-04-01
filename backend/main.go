@@ -20,7 +20,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 func main() {
 	var httpServer http.Server
 	http.HandleFunc("/", handler)
-	log.Println("start http listening :18888")
-	httpServer.Addr = ":18888"
+	log.Println("start http listening :8080")
+	httpServer.Addr = ":8080"
 	log.Println(httpServer.ListenAndServe())
 }

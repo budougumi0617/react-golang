@@ -16,6 +16,15 @@ services:
       - '8080:8080'
     environment:
       - NODE_ENV=development
+  # Database server using Mysql
+  db-server:
+    container_name: db-server
+    build:
+      # current directory in build
+      context: ./db
+      dockerfile: ./Dockerfile
+    ports:
+      - '23306:3306'
   # Backend server by golang
   api-server:
     container_name: api-server
@@ -23,6 +32,8 @@ services:
       # current directory in build
       context: ./backend
       dockerfile: ./Dockerfile
+    links:
+     - db-server
     volumes:
       - ./backend:/go/src/github.com/budougumi0617/react-golang/backend
       - /go/src/github.com/budougumi0617/react-golang/backend/vendor

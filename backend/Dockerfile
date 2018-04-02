@@ -10,6 +10,8 @@ RUN dep ensure
 # Expose port for access to your app outside of container
 EXPOSE 8080
 
+# Install MySQL-client
+RUN apt-get update && apt-get install -y mysql-client
 # Starting server
 CMD [ "go", "run", "./main.go" ]
 

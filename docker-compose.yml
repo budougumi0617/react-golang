@@ -33,6 +33,9 @@ services:
       context: ./backend
       dockerfile: ./Dockerfile
     links:
+     # Able to accsess to database server
+     # ex:
+     # mysql -h db-server -uroot
      - db-server
     volumes:
       - ./backend:/go/src/github.com/budougumi0617/react-golang/backend

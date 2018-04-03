@@ -1,4 +1,5 @@
 USE todo;
+-- Insert initlal data
 START TRANSACTION;
 INSERT INTO tasks(title, body) VALUES('First task', 'test data1');
 INSERT INTO tasks(title, body) VALUES('Second task', 'test data2');

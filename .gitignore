@@ -68,3 +68,5 @@ dist/app.js
 dist/app.css
 dist/bundle.css
 
+# Ignore for golang
+vendor/

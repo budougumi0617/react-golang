@@ -70,3 +70,5 @@ dist/bundle.css
 
 # Ignore for golang
 vendor/
+# Executable file
+backend/backend

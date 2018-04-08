@@ -2,16 +2,17 @@
 FROM golang:1.10 as devserver
 # Workdir is path in your docker image from where all your commands will be executed
 WORKDIR /go/src/github.com/budougumi0617/react-golang/backend
+# Install MySQL-client
+RUN apt-get update && apt-get install -y mysql-client
 # Add all from your project inside workdir of docker image
 ADD . /go/src/github.com/budougumi0617/react-golang/backend
 # Then run your script to install dependencies and build application
 RUN curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+# Resolve dependencies
 RUN dep ensure
 # Expose port for access to your app outside of container
 EXPOSE 8080
 
-# Install MySQL-client
-RUN apt-get update && apt-get install -y mysql-client
 # Starting server
 CMD [ "go", "run", "./main.go" ]
 

@@ -33,6 +33,7 @@ module.exports = [
       host: '0.0.0.0',
       port: 8080,
       // Request proxies to api-server
+      // https://webpack.js.org/configuration/dev-server/#devserver-proxy
       proxy: {
         '/api': {
           target: 'http://localhost:8888',

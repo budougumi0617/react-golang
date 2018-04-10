@@ -31,7 +31,15 @@ module.exports = [
     devServer: {
       contentBase: path.resolve(__dirname, 'dist'),
       host: '0.0.0.0',
-      port: 8080
+      port: 8080,
+      // Request proxies to api-server
+      proxy: {
+        '/api': {
+          target: 'http://localhost:8888',
+          pathRewrite: {"^/api" : ""},
+          secure: false
+        }
+      }
     },
     devtool: 'inline-source-map'
     // Vagrantなどでhot reloadされない場合はwatchOptions

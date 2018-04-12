@@ -9,6 +9,11 @@ services:
       # current directory in build
       context: ./front
       dockerfile: ./Dockerfile
+    links:
+      # Able to accsess to backend server
+      # ex:
+      # curl http://api-server:8080/tasks/5
+      - api-server
     volumes:
       - ./front:/usr/src/app
       - /usr/src/app/node_modules
@@ -33,12 +38,12 @@ services:
       context: ./backend
       dockerfile: ./Dockerfile
     links:
-     # Able to accsess to database server
-     # ex:
-     # mysql -h db-server -uroot
-     - db-server
+      # Able to accsess to database server
+      # ex:
+      # mysql -h db-server -uroot
+      - db-server
     volumes:
       - ./backend:/go/src/github.com/budougumi0617/react-golang/backend
       - /go/src/github.com/budougumi0617/react-golang/backend/vendor
     ports:
-      - '8888:8080'
+      - '28888:8080'

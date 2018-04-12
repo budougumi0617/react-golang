@@ -3,6 +3,7 @@
 package routing
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -55,5 +56,11 @@ func getTaskByID(resp http.ResponseWriter, r *http.Request) {
 		resp.Write([]byte(err.Error()))
 	}
 
-	fmt.Fprintf(resp, "task %+v\n", task)
+	b, err := json.Marshal(task)
+	if err != nil {
+		log.Println("could not marshl JSON")
+		resp.WriteHeader(500)
+		return
+	}
+	fmt.Fprintf(resp, "task %+v\n", string(b))
 }

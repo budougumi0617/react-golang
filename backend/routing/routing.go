@@ -32,7 +32,7 @@ func GetTaskRouter() chi.Router {
 		},
 	)
 	router.Use(middleware.Logger)
-	// 	router.HandleFunc("/todos", TodoIndex)
+	router.HandleFunc("/tasks", getAllTasks)
 	router.HandleFunc("/tasks/{id}", getTaskByID)
 	// 	router.Post("/todos", TodoCreate)
 	// TODO Need to set default error response
@@ -63,4 +63,21 @@ func getTaskByID(resp http.ResponseWriter, r *http.Request) {
 		return
 	}
 	fmt.Fprintf(resp, "task %+v\n", string(b))
+}
+
+func getAllTasks(resp http.ResponseWriter, r *http.Request) {
+	tasks, err := task.All()
+	if err != nil {
+		resp.WriteHeader(404)
+		resp.Write([]byte(err.Error()))
+	}
+
+	b, err := json.Marshal(tasks)
+	if err != nil {
+		log.Println("could not marshl JSON")
+		resp.WriteHeader(500)
+		return
+	}
+	fmt.Fprintf(resp, "tasks %+v\n", string(b))
+
 }

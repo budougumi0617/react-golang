@@ -31,9 +31,24 @@ func GetByID(id int) (*Task, error) {
 	}
 	defer db.Close()
 	db.LogMode(true)
-	task := &Task{}
+	var task Task
 	if err := db.Find(&task, id).Error; err != nil {
 		return nil, err
 	}
-	return task, nil
+	return &task, nil
+}
+
+// All TODO
+func All() ([]Task, error) {
+	db, err := gorm.Open("mysql", "root:@tcp(db-server:3306)/todo?charset=utf8&parseTime=True&loc=Local")
+	if err != nil {
+		log.Println(err)
+	}
+	defer db.Close()
+	db.LogMode(true)
+	var tasks []Task
+	if err := db.Find(&tasks).Error; err != nil {
+		return nil, err
+	}
+	return tasks, nil
 }

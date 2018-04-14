@@ -23,7 +23,7 @@ type Task struct {
 // Tasks is Task list.
 type Tasks []Task
 
-// GetByID TODO
+// GetByID returns a task by ID
 func GetByID(id int) (*Task, error) {
 	db, err := gorm.Open("mysql", "root:@tcp(db-server:3306)/todo?charset=utf8&parseTime=True&loc=Local")
 	if err != nil {
@@ -38,7 +38,7 @@ func GetByID(id int) (*Task, error) {
 	return &task, nil
 }
 
-// All TODO
+// All returns tasks
 func All() ([]Task, error) {
 	db, err := gorm.Open("mysql", "root:@tcp(db-server:3306)/todo?charset=utf8&parseTime=True&loc=Local")
 	if err != nil {

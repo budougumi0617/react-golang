@@ -9,6 +9,13 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
+const (
+	// BASE defines mysql URL.
+	BASE = "root:@tcp(db-server:3306)"
+	// ENDPOINT defines database URL
+	ENDPOINT = "/todo?charset=utf8&parseTime=True&loc=Local"
+)
+
 // Task is a basic model.
 type Task struct {
 	ID        int       `json:"id"`
@@ -25,7 +32,8 @@ type Tasks []Task
 
 // Create inserts the Task in DB.
 func Create(task Task) (*Task, error) {
-	db, err := gorm.Open("mysql", "root:@tcp(db-server:3306)/todo?charset=utf8&parseTime=True&loc=Local")
+	url := BASE + ENDPOINT
+	db, err := gorm.Open("mysql", url)
 	if err != nil {
 		log.Println(err)
 	}
@@ -39,7 +47,8 @@ func Create(task Task) (*Task, error) {
 
 // GetByID returns a task by ID.
 func GetByID(id int) (*Task, error) {
-	db, err := gorm.Open("mysql", "root:@tcp(db-server:3306)/todo?charset=utf8&parseTime=True&loc=Local")
+	url := BASE + ENDPOINT
+	db, err := gorm.Open("mysql", url)
 	if err != nil {
 		log.Println(err)
 	}
@@ -54,7 +63,8 @@ func GetByID(id int) (*Task, error) {
 
 // All returns tasks
 func All() ([]Task, error) {
-	db, err := gorm.Open("mysql", "root:@tcp(db-server:3306)/todo?charset=utf8&parseTime=True&loc=Local")
+	url := BASE + ENDPOINT
+	db, err := gorm.Open("mysql", url)
 	if err != nil {
 		log.Println(err)
 	}

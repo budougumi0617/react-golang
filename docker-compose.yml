@@ -9,16 +9,21 @@ services:
       # current directory in build
       context: ./front
       dockerfile: ./Dockerfile
-    links:
+      # links:
       # Able to accsess to backend server
       # ex:
       # curl http://api-server:8080/tasks/5
-      - api-server
+      # - api-server
     volumes:
       - ./front:/usr/src/app
       - /usr/src/app/node_modules
     ports:
       - '8080:8080'
+    networks:
+      # Able to accsess to backend server
+      # ex:
+      # curl http://api-server:8080/tasks/5
+      - app-net
     environment:
       - NODE_ENV=development
   # Database server using Mysql
@@ -30,6 +35,8 @@ services:
       dockerfile: ./Dockerfile
     ports:
       - '23306:3306'
+    networks:
+      - app-net
   # Backend server by golang
   api-server:
     container_name: api-server
@@ -37,13 +44,20 @@ services:
       # current directory in build
       context: ./backend
       dockerfile: ./Dockerfile
-    links:
+      #links:
       # Able to accsess to database server
       # ex:
       # mysql -h db-server -uroot
-      - db-server
+      #- db-server
     volumes:
       - ./backend:/go/src/github.com/budougumi0617/react-golang/backend
       - /go/src/github.com/budougumi0617/react-golang/backend/vendor
     ports:
       - '28888:8080'
+    networks:
+      # Able to accsess to database server
+      # ex:
+      # mysql -h db-server -uroot
+      - app-net
+  networks:
+    - app-net

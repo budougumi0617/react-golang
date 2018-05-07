@@ -1,7 +1,9 @@
 package task
 
 import (
+	"errors"
 	"log"
+	"strconv"
 	"time"
 
 	"github.com/jinzhu/gorm"
@@ -43,6 +45,24 @@ func Create(task Task) (*Task, error) {
 		return nil, err
 	}
 	return &task, nil
+}
+
+// Delete removes the Task in DB.
+func Delete(task Task) error {
+	if task.ID == 0 {
+		return errors.New("must need primary key, but ID was " + strconv.Itoa(task.ID))
+	}
+	url := BASE + ENDPOINT
+	db, err := gorm.Open("mysql", url)
+	if err != nil {
+		log.Println(err)
+	}
+	defer db.Close()
+	db.LogMode(true)
+	if err := db.Delete(&task).Error; err != nil {
+		return err
+	}
+	return nil
 }
 
 // GetByID returns a task by ID.

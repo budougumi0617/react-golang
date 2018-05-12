@@ -32,9 +32,9 @@ func GetTaskRouter() chi.Router {
 		},
 	)
 	router.Use(middleware.Logger)
-	router.HandleFunc("/tasks", getAllTasks)
+	router.Get("/tasks", getAllTasks)
 	router.HandleFunc("/tasks/{id}", getTaskByID)
-	// 	router.Post("/todos", TodoCreate)
+	router.Post("/tasks", addTask)
 	// TODO Need to set default error response
 	return router
 }
@@ -43,6 +43,24 @@ func newLogger() *log.Logger {
 	return log.New(os.Stdout, "chi-log: ", log.Lshortfile)
 }
 
+func addTask(resp http.ResponseWriter, req *http.Request) {
+	title := chi.URLParam(req, "title")
+	body := chi.URLParam(req, "body")
+	t, err := task.Create(title, body)
+	if err != nil {
+		resp.Write([]byte(err.Error()))
+		resp.WriteHeader(500)
+		return
+	}
+	b, err := json.Marshal(t)
+	if err != nil {
+		log.Println("could not marshl JSON")
+		resp.WriteHeader(500)
+		return
+	}
+	fmt.Fprintf(resp, "task %+v\n", string(b))
+
+}
 func getTaskByID(resp http.ResponseWriter, r *http.Request) {
 	sid := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(sid)

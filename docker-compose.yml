@@ -17,13 +17,15 @@ services:
     volumes:
       - ./front:/usr/src/app
       - /usr/src/app/node_modules
+    depends_on:
+      - api-server
     ports:
       - '8080:8080'
     networks:
       # Able to accsess to backend server
       # ex:
       # curl http://api-server:8080/tasks/5
-      - app-net
+      - frontend
     environment:
       - NODE_ENV=development
   # Database server using Mysql
@@ -36,7 +38,8 @@ services:
     ports:
       - '23306:3306'
     networks:
-      - app-net
+      # Allow access from api-server
+      - backend
   # Backend server by golang
   api-server:
     container_name: api-server
@@ -52,12 +55,18 @@ services:
     volumes:
       - ./backend:/go/src/github.com/budougumi0617/react-golang/backend
       - /go/src/github.com/budougumi0617/react-golang/backend/vendor
+    depends_on:
+      - db-server
     ports:
       - '28888:8080'
     networks:
-      # Able to accsess to database server
+      # Allow access from sample-app
+      - frontend
+      # Able to accsess to db-server
       # ex:
       # mysql -h db-server -uroot
-      - app-net
-  networks:
-    - app-net
+      - backend
+
+networks:
+  frontend:
+  backend:

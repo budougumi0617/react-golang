@@ -5,6 +5,8 @@ package routing
 import (
 	"encoding/json"
 	"fmt"
+	"io"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -44,23 +46,41 @@ func newLogger() *log.Logger {
 }
 
 func addTask(resp http.ResponseWriter, req *http.Request) {
-	title := chi.URLParam(req, "title")
-	body := chi.URLParam(req, "body")
-	t, err := task.Create(title, body)
+	var t task.Task
+	body, err := ioutil.ReadAll(io.LimitReader(req.Body, 1048576))
 	if err != nil {
-		resp.Write([]byte(err.Error()))
+		panic(err)
+	}
+	if err := req.Body.Close(); err != nil {
+		log.Println("parse request error")
 		resp.WriteHeader(500)
 		return
 	}
-	b, err := json.Marshal(t)
+	if err := json.Unmarshal(body, &t); err != nil {
+		resp.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		resp.WriteHeader(422) // unprocessable entity
+		if err := json.NewEncoder(resp).Encode(err); err != nil {
+			log.Println("could not marshl JSON")
+			resp.WriteHeader(500)
+			return
+		}
+	}
+
+	result, err := task.Create(t)
 	if err != nil {
 		log.Println("could not marshl JSON")
 		resp.WriteHeader(500)
 		return
 	}
-	fmt.Fprintf(resp, "task %+v\n", string(b))
-
+	resp.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	resp.WriteHeader(http.StatusCreated)
+	if err := json.NewEncoder(resp).Encode(result); err != nil {
+		log.Println("could not marshl JSON")
+		resp.WriteHeader(500)
+		return
+	}
 }
+
 func getTaskByID(resp http.ResponseWriter, r *http.Request) {
 	sid := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(sid)

@@ -14,6 +14,7 @@ import (
 const (
 	// BASE defines mysql URL.
 	BASE = "root:@tcp(db-server:3306)"
+
 	// ENDPOINT defines database URL
 	ENDPOINT = "/todo?charset=utf8&parseTime=True&loc=Local"
 )
@@ -33,11 +34,7 @@ type Task struct {
 type Tasks []Task
 
 // Create inserts the Task in DB.
-func Create(title, body string) (*Task, error) {
-	task := Task{
-		Title: title,
-		Body:  body,
-	}
+func Create(task Task) (*Task, error) {
 	url := BASE + ENDPOINT
 	db, err := gorm.Open("mysql", url)
 	if err != nil {

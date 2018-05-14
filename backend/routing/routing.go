@@ -53,30 +53,30 @@ func addTask(resp http.ResponseWriter, req *http.Request) {
 	}
 	if err := req.Body.Close(); err != nil {
 		log.Println("parse request error")
-		resp.WriteHeader(500)
+		resp.WriteHeader(http.StatusBadRequest)
 		return
 	}
 	if err := json.Unmarshal(body, &t); err != nil {
 		resp.Header().Set("Content-Type", "application/json; charset=UTF-8")
-		resp.WriteHeader(422) // unprocessable entity
+		resp.WriteHeader(http.StatusBadRequest) // unprocessable entity
 		if err := json.NewEncoder(resp).Encode(err); err != nil {
 			log.Println("could not marshl JSON")
-			resp.WriteHeader(500)
+			resp.WriteHeader(http.StatusBadRequest)
 			return
 		}
 	}
 
 	result, err := task.Create(t)
 	if err != nil {
-		log.Println("could not marshl JSON")
-		resp.WriteHeader(500)
+		log.Println("Save data error")
+		resp.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 	resp.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	resp.WriteHeader(http.StatusCreated)
 	if err := json.NewEncoder(resp).Encode(result); err != nil {
 		log.Println("could not marshl JSON")
-		resp.WriteHeader(500)
+		resp.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 }

@@ -46,7 +46,6 @@ func newLogger() *log.Logger {
 }
 
 func addTask(resp http.ResponseWriter, req *http.Request) {
-	var t task.Task
 	body, err := ioutil.ReadAll(io.LimitReader(req.Body, 1048576))
 	if err != nil {
 		panic(err)
@@ -55,6 +54,10 @@ func addTask(resp http.ResponseWriter, req *http.Request) {
 		log.Println("parse request error")
 		resp.WriteHeader(http.StatusBadRequest)
 		return
+	}
+	var t struct {
+		Title string `json:"title"`
+		Body  string `json:"body"`
 	}
 	if err := json.Unmarshal(body, &t); err != nil {
 		resp.Header().Set("Content-Type", "application/json; charset=UTF-8")
@@ -66,7 +69,7 @@ func addTask(resp http.ResponseWriter, req *http.Request) {
 		}
 	}
 
-	result, err := task.Create(t)
+	result, err := task.Create(t.Title, t.Body)
 	if err != nil {
 		log.Println("Save data error")
 		resp.WriteHeader(http.StatusInternalServerError)

@@ -34,7 +34,11 @@ type Task struct {
 type Tasks []Task
 
 // Create inserts the Task in DB.
-func Create(task Task) (*Task, error) {
+func Create(title, body string) (*Task, error) {
+	task := Task{
+		Title: title,
+		Body:  body,
+	}
 	url := BASE + ENDPOINT
 	db, err := gorm.Open("mysql", url)
 	if err != nil {

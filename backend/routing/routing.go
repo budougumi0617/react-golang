@@ -90,14 +90,14 @@ func getTaskByID(resp http.ResponseWriter, r *http.Request) {
 	}
 	task, err := task.GetByID(id)
 	if err != nil {
-		resp.WriteHeader(404)
+		resp.WriteHeader(http.StatusNotFound)
 		resp.Write([]byte(err.Error()))
 	}
 
 	b, err := json.Marshal(task)
 	if err != nil {
 		log.Println("could not marshl JSON")
-		resp.WriteHeader(500)
+		resp.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 	fmt.Fprintf(resp, "task %+v\n", string(b))
@@ -106,14 +106,14 @@ func getTaskByID(resp http.ResponseWriter, r *http.Request) {
 func getAllTasks(resp http.ResponseWriter, r *http.Request) {
 	tasks, err := task.All()
 	if err != nil {
-		resp.WriteHeader(404)
+		resp.WriteHeader(http.StatusNotFound)
 		resp.Write([]byte(err.Error()))
 	}
 
 	b, err := json.Marshal(tasks)
 	if err != nil {
 		log.Println("could not marshl JSON")
-		resp.WriteHeader(500)
+		resp.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 	fmt.Fprintf(resp, "tasks %+v\n", string(b))

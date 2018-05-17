@@ -45,6 +45,15 @@ func newLogger() *log.Logger {
 	return log.New(os.Stdout, "chi-log: ", log.Lshortfile)
 }
 
+//  $ curl -D - -H 'Content-Type:application/json' -X POST -d '{"title":"From Client", "body":"main content"}' http://localhost:8080/api/tasks
+//  HTTP/1.1 200 OK
+//  X-Powered-By: Express
+//  content-type: application/json; charset=UTF-8
+//  date: Thu, 17 May 2018 01:51:53 GMT
+//  content-length: 146
+//  connection: close
+//
+//  {"id":12,"title":"From Client","body":"main content","created_at":"2018-05-17T01:51:53.846000093Z","updated_at":"2018-05-17T01:51:53.846000093Z"}
 func addTask(resp http.ResponseWriter, req *http.Request) {
 	body, err := ioutil.ReadAll(io.LimitReader(req.Body, 1048576))
 	if err != nil {
@@ -109,6 +118,15 @@ func getTaskByID(resp http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(resp, "task %+v\n", string(b))
 }
 
+//  $ curl -D - -X GET http://localhost:8080/api/tasks
+//  HTTP/1.1 200 OK
+//  X-Powered-By: Express
+//  content-type: application/json; charset=UTF-8
+//  date: Thu, 17 May 2018 01:45:24 GMT
+//  content-length: 1469
+//  connection: close
+//
+//  [{"id":1,"title":"First task","body":"test data1","created_...
 func getAllTasks(resp http.ResponseWriter, r *http.Request) {
 	tasks, err := task.All()
 	if err != nil {

@@ -76,7 +76,7 @@ func addTask(resp http.ResponseWriter, req *http.Request) {
 	resp.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	resp.WriteHeader(http.StatusOK)
 	if err := json.NewEncoder(resp).Encode(result); err != nil {
-		log.Println("could not marshl JSON")
+		log.Println("could not marshal JSON")
 		resp.WriteHeader(http.StatusInternalServerError)
 		resp.Write([]byte(err.Error()))
 	}
@@ -100,7 +100,7 @@ func getTaskByID(resp http.ResponseWriter, r *http.Request) {
 
 	b, err := json.Marshal(task)
 	if err != nil {
-		log.Println("could not marshl JSON from task")
+		log.Println("could not marshal JSON from task")
 		resp.WriteHeader(http.StatusInternalServerError)
 		resp.Write([]byte(err.Error()))
 		return
@@ -120,7 +120,7 @@ func getAllTasks(resp http.ResponseWriter, r *http.Request) {
 	resp.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	resp.WriteHeader(http.StatusOK)
 	if err := json.NewEncoder(resp).Encode(tasks); err != nil {
-		log.Println("could not marshl JSON")
+		log.Println("could not marshal JSON")
 		resp.WriteHeader(http.StatusInternalServerError)
 		resp.Write([]byte(err.Error()))
 	}

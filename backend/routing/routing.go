@@ -53,6 +53,7 @@ func addTask(resp http.ResponseWriter, req *http.Request) {
 	if err := req.Body.Close(); err != nil {
 		log.Println("parse request error")
 		resp.WriteHeader(http.StatusBadRequest)
+		resp.Write([]byte(err.Error()))
 		return
 	}
 	var t struct {
@@ -60,27 +61,24 @@ func addTask(resp http.ResponseWriter, req *http.Request) {
 		Body  string `json:"body"`
 	}
 	if err := json.Unmarshal(body, &t); err != nil {
-		resp.Header().Set("Content-Type", "application/json; charset=UTF-8")
 		resp.WriteHeader(http.StatusBadRequest) // unprocessable entity
-		if err := json.NewEncoder(resp).Encode(err); err != nil {
-			log.Println("could not marshl JSON")
-			resp.WriteHeader(http.StatusBadRequest)
-			return
-		}
+		resp.Write([]byte(err.Error()))
+		return
 	}
 
 	result, err := task.Create(t.Title, t.Body)
 	if err != nil {
 		log.Println("Save data error")
 		resp.WriteHeader(http.StatusInternalServerError)
+		resp.Write([]byte(err.Error()))
 		return
 	}
 	resp.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	resp.WriteHeader(http.StatusCreated)
+	resp.WriteHeader(http.StatusOK)
 	if err := json.NewEncoder(resp).Encode(result); err != nil {
 		log.Println("could not marshl JSON")
 		resp.WriteHeader(http.StatusInternalServerError)
-		return
+		resp.Write([]byte(err.Error()))
 	}
 }
 
@@ -89,20 +87,25 @@ func getTaskByID(resp http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(sid)
 	if err != nil {
 		log.Println("could not get id")
+		resp.WriteHeader(http.StatusInternalServerError)
+		resp.Write([]byte(err.Error()))
 		return
 	}
 	task, err := task.GetByID(id)
 	if err != nil {
 		resp.WriteHeader(http.StatusNotFound)
 		resp.Write([]byte(err.Error()))
+		return
 	}
 
 	b, err := json.Marshal(task)
 	if err != nil {
-		log.Println("could not marshl JSON")
+		log.Println("could not marshl JSON from task")
 		resp.WriteHeader(http.StatusInternalServerError)
+		resp.Write([]byte(err.Error()))
 		return
 	}
+	resp.WriteHeader(http.StatusOK)
 	fmt.Fprintf(resp, "task %+v\n", string(b))
 }
 
@@ -111,14 +114,14 @@ func getAllTasks(resp http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		resp.WriteHeader(http.StatusNotFound)
 		resp.Write([]byte(err.Error()))
-	}
-
-	b, err := json.Marshal(tasks)
-	if err != nil {
-		log.Println("could not marshl JSON")
-		resp.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-	fmt.Fprintf(resp, "tasks %+v\n", string(b))
 
+	resp.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	resp.WriteHeader(http.StatusOK)
+	if err := json.NewEncoder(resp).Encode(tasks); err != nil {
+		log.Println("could not marshl JSON")
+		resp.WriteHeader(http.StatusInternalServerError)
+		resp.Write([]byte(err.Error()))
+	}
 }

@@ -45,6 +45,7 @@ func Create(title, body string) (*Task, error) {
 		log.Println(err)
 	}
 	defer db.Close()
+
 	db.LogMode(true)
 	if err := db.Create(&task).Error; err != nil {
 		return nil, err
@@ -63,6 +64,7 @@ func Delete(task Task) error {
 		log.Println(err)
 	}
 	defer db.Close()
+
 	db.LogMode(true)
 	if err := db.Delete(&task).Error; err != nil {
 		return err
@@ -94,6 +96,7 @@ func All() ([]Task, error) {
 		log.Println(err)
 	}
 	defer db.Close()
+
 	db.LogMode(true)
 	var tasks []Task
 	if err := db.Find(&tasks).Error; err != nil {
